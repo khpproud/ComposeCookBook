@@ -2,6 +2,7 @@ package com.guru.composecookbook.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -12,10 +13,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FiberManualRecord
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +37,7 @@ import com.guru.composecookbook.R
 import com.guru.composecookbook.data.DemoDataProvider
 import com.guru.composecookbook.data.model.HomeScreenItems
 import com.guru.composecookbook.theme.*
+import com.guru.composecookbook.theme.components.Material3Card
 import com.guru.composecookbook.ui.home.advancelists.AdvanceListsActivity
 import com.guru.composecookbook.ui.home.customfling.FlingListActivity
 import com.guru.composecookbook.ui.home.dialogs.DialogsActivity
@@ -43,20 +50,21 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-@OptIn(ExperimentalMaterialApi::class)
-@ExperimentalFoundationApi
+@OptIn(ExperimentalMaterialApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class,
+ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(appThemeState: MutableState<AppThemeState>,
-               chooseColorBottomModalState: ModalBottomSheetState) {
+fun HomeScreen(
+    appThemeState: MutableState<AppThemeState>,
+    chooseColorBottomModalState: ModalBottomSheetState
+) {
     val showMenu = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier.testTag(TestTags.HOME_SCREEN_ROOT),
         topBar = {
-            TopAppBar(
+            SmallTopAppBar(
                 title = { Text(text = "Compose CookBook") },
-                elevation = 8.dp,
                 actions = {
                     IconButton(onClick = {
                         appThemeState.value = appThemeState
@@ -92,7 +100,7 @@ private fun ChangeColorIconButton(
     showMenu: MutableState<Boolean>
 ) {
     val accessibilityManager = LocalContext.current.getSystemService(Context.ACCESSIBILITY_SERVICE)
-                as android.view.accessibility.AccessibilityManager
+            as android.view.accessibility.AccessibilityManager
     IconButton(onClick = {
         if (accessibilityManager.isEnabled && accessibilityManager.isTouchExplorationEnabled) {
             //Showing modal bottom sheet instead when user use a screen reader (otherwise it's not accessible)
@@ -111,8 +119,8 @@ private fun ChangeColorIconButton(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-@ExperimentalFoundationApi
+@OptIn(ExperimentalMaterialApi::class,
+ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreenContent(
     isDarkTheme: Boolean,
@@ -146,7 +154,7 @@ fun HomeScreenContent(
                     })
             }
         }
-        if(showMenu.value){
+        if (showMenu.value) {
             PalletMenu(
                 modifier = Modifier.align(Alignment.TopEnd),
                 onPalletChange
@@ -162,11 +170,11 @@ fun PalletMenu(
     modifier: Modifier,
     onPalletChange: (ColorPallet) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth()){
+    Box(modifier = Modifier.fillMaxWidth()) {
         Column(
             horizontalAlignment = Alignment.Start,
             modifier = modifier
-                .background(MaterialTheme.colors.background)
+                .background(MaterialTheme.colorScheme.background)
                 .animateContentSize(),
         ) {
             MenuItem(green500, "Green") {
@@ -181,6 +189,11 @@ fun PalletMenu(
             MenuItem(blue500, "Blue") {
                 onPalletChange.invoke(ColorPallet.BLUE)
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                MenuItem(dynamicLightColorScheme(LocalContext.current).primary, "Dynamic") {
+                    onPalletChange.invoke(ColorPallet.WALLPAPER)
+                }
+            }
         }
     }
 }
@@ -193,7 +206,11 @@ fun MenuItem(color: Color, name: String, onPalletChange: () -> Unit) {
             .clickable(onClick = onPalletChange),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = Icons.Filled.FiberManualRecord, tint = color, contentDescription = null)
+        Icon(
+            imageVector = Icons.Filled.FiberManualRecord,
+            tint = color,
+            contentDescription = null
+        )
         Text(text = name, modifier = Modifier.padding(8.dp))
     }
 }
@@ -205,20 +222,20 @@ fun HomeScreenListView(
     isWiderScreen: Boolean
 ) {
     if (isWiderScreen) {
-        Card(
+        Material3Card(
             modifier = Modifier
                 .clickable { homeItemClicked(homeScreenItems, context, isDarkTheme) }
                 .height(150.dp)
                 .padding(8.dp),
-            backgroundColor = MaterialTheme.colors.primary,
+            backgroundColor = MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(8.dp),
             elevation = 4.dp,
-            contentColor = MaterialTheme.colors.onPrimary
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ) {
             Text(
                 text = homeScreenItems.name,
                 modifier = Modifier.padding(8.dp),
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.titleMedium
             )
         }
     } else {
@@ -232,7 +249,7 @@ fun HomeScreenListView(
             Text(
                 text = homeScreenItems.name,
                 modifier = Modifier.padding(8.dp),
-                style = MaterialTheme.typography.button
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }
@@ -257,7 +274,11 @@ fun homeItemClicked(homeScreenItems: HomeScreenItems, context: Context, isDarkTh
             DynamicUIActivity.newIntent(context, DynamicUiType.CAROUSELL.name, isDarkTheme)
         }
         HomeScreenItems.ConstraintsLayout -> {
-            DynamicUIActivity.newIntent(context, DynamicUiType.CONSTRAINTLAYOUT.name, isDarkTheme)
+            DynamicUIActivity.newIntent(
+                context,
+                DynamicUiType.CONSTRAINTLAYOUT.name,
+                isDarkTheme
+            )
         }
         HomeScreenItems.CollapsingAppBar -> {
             DynamicUIActivity.newIntent(context, DynamicUiType.TABS.name, isDarkTheme)
@@ -293,15 +314,16 @@ fun homeItemClicked(homeScreenItems: HomeScreenItems, context: Context, isDarkTh
     context.startActivity(intent)
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-@ExperimentalFoundationApi
+@OptIn(ExperimentalMaterialApi::class,
+ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun PreviewHomeScreen() {
     val state = remember {
         mutableStateOf(AppThemeState(false, ColorPallet.GREEN))
     }
-    val chooseColorBottomModalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val chooseColorBottomModalState =
+        rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     HomeScreen(state, chooseColorBottomModalState)
 }

@@ -6,12 +6,16 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Colors
 import androidx.compose.material.Divider
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.Text
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,7 +44,7 @@ fun HeadingSection(modifier: Modifier = Modifier, title: String = "", subtitle: 
 
 @Composable
 fun TitleText(modifier: Modifier = Modifier, title: String) {
-    Text(
+    androidx.compose.material3.Text(
         text = title,
         style = typography.h6.copy(fontSize = 14.sp),
         modifier = modifier.padding(8.dp)
@@ -49,7 +53,7 @@ fun TitleText(modifier: Modifier = Modifier, title: String) {
 
 @Composable
 fun SubtitleText(subtitle: String, modifier: Modifier = Modifier) {
-    Text(text = subtitle, style = typography.subtitle2, modifier = modifier.padding(8.dp))
+    androidx.compose.material3.Text(text = subtitle, style = typography.subtitle2, modifier = modifier.padding(8.dp))
 }
 
 @Composable
@@ -62,8 +66,12 @@ fun RotateIcon(
 ) {
     FaIcon(
         faIcon = FaIcons.Play,
-        tint = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
         size = 20.dp,
+        tint = LocalContentColor
+            .current.copy(
+                alpha =
+                LocalContentAlpha.current
+            ),
         modifier = modifier
             .padding(2.dp)
             .graphicsLayer(

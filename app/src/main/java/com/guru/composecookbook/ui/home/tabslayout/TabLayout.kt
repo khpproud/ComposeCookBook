@@ -7,11 +7,17 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.ScrollableTabRow
+import androidx.compose.material.Tab
+import androidx.compose.material.TabPosition
+import androidx.compose.material.TabRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,9 +28,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.guru.composecookbook.data.DemoDataProvider
-import com.guru.composecookbook.instagram.components.InstagramListItem
+import com.guru.composecookbook.instagram.components.posts.PostItem
 import com.guru.composecookbook.ui.home.lists.GridListView
 import com.guru.composecookbook.ui.home.lists.VerticalListView
+import kotlin.random.Random
 
 private enum class DemoTabs(val value: String) {
     APPLE("Apple"),
@@ -43,7 +50,10 @@ fun TabLayout() {
         // by overriding right/left swipe on content and updating state of selectedTab or using pager
 
         //Use ScrollableTabRow for list of tabs
-        TabRow(selectedTabIndex = selectedIndex.value) {
+        TabRow(
+            selectedTabIndex = selectedIndex.value,
+            backgroundColor = MaterialTheme.colorScheme.surface
+        ) {
             tabsName.forEachIndexed { index, title ->
                 Tab(
                     selected = index == selectedIndex.value,
@@ -60,7 +70,7 @@ fun TabLayout() {
                             }
                         }
                     },
-                    text = { Text(title) }
+                    text = { Text(title, color = MaterialTheme.colorScheme.onPrimaryContainer) }
                 )
             }
         }
@@ -113,7 +123,13 @@ fun ScrollableListOfTabs() {
                 }
             }
         }
-        InstagramListItem(post = tweets[selectedIndex.value])
+        PostItem(
+            post = tweets[selectedIndex.value],
+            isLiked = Random.nextBoolean(),
+            onLikeClicked = {},
+            onCommentsClicked = {},
+            onSendClicked = {}
+        )
     }
 }
 
@@ -128,18 +144,18 @@ private fun CustomImageChip(
 ) {
     Surface(
         color = when {
-            selected -> MaterialTheme.colors.primary
+            selected -> MaterialTheme.colorScheme.primary
             else -> Color.Transparent
         },
         contentColor = when {
-            selected -> MaterialTheme.colors.onPrimary
+            selected -> MaterialTheme.colorScheme.onPrimary
             else -> Color.LightGray
         },
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(
             width = 1.dp,
             color = when {
-                selected -> MaterialTheme.colors.primary
+                selected -> MaterialTheme.colorScheme.primary
                 else -> Color.LightGray
             }
         ),
@@ -156,7 +172,7 @@ private fun CustomImageChip(
             )
             Text(
                 text = text,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(end = 8.dp, top = 8.dp, bottom = 8.dp)
             )
         }

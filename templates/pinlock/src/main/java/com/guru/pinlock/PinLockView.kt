@@ -4,9 +4,12 @@ import FaIcons
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.outlined.Circle
@@ -29,8 +32,8 @@ import com.guru.fontawesomecomposelib.FaIcon
 const val pinSize = 4
 const val password = "2580"
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
+@OptIn(ExperimentalMaterialApi::class,
+ExperimentalFoundationApi::class)
 @Composable
 @Preview
 fun PinLockView() {
@@ -54,16 +57,16 @@ fun PinLockView() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.primary),
+            .background(MaterialTheme.colorScheme.primaryContainer),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(100.dp))
 
-        FaIcon(faIcon = FaIcons.UserLock, size = 64.dp, tint = MaterialTheme.colors.onPrimary)
+        FaIcon(faIcon = FaIcons.UserLock, size = 64.dp, tint = MaterialTheme.colorScheme.onPrimary)
 
         Text(
             text = "Enter pin to unlock", style = typography.h6, modifier = Modifier
-                .padding(16.dp), color = MaterialTheme.colors.onPrimary
+                .padding(16.dp), color = MaterialTheme.colorScheme.onPrimary
         )
 
         Spacer(modifier = Modifier.height(100.dp))
@@ -83,7 +86,7 @@ fun PinLockView() {
                         imageVector = if (inputPin.size > it) Icons.Default.Circle else Icons.Outlined.Circle,
                         contentDescription = it.toString(),
                         modifier = Modifier.padding(8.dp),
-                        tint = MaterialTheme.colors.onPrimary
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -91,7 +94,7 @@ fun PinLockView() {
 
         Text(
             text = error.value,
-            color = MaterialTheme.colors.error,
+            color = MaterialTheme.colorScheme.error,
             modifier = Modifier.padding(16.dp)
         )
 
@@ -142,7 +145,7 @@ fun PinLockView() {
         ) {
             FaIcon(
                 faIcon = FaIcons.Fingerprint, size = 36
-                    .dp, tint = MaterialTheme.colors.onPrimary,
+                    .dp, tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.clickable {
                     context.startActivity(BiometricActivity.newIntent(context))
                 }
@@ -161,7 +164,7 @@ fun PinLockView() {
             }
             FaIcon(
                 faIcon = FaIcons.Backspace, size = 36.dp,
-                tint = MaterialTheme.colors.onPrimary,
+                tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.clickable {
                     if (inputPin.isNotEmpty()) {
                         inputPin.removeLast()
@@ -172,29 +175,26 @@ fun PinLockView() {
     }
 }
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PinKeyItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier.padding(8.dp),
-    shape: Shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50)),
-    backgroundColor: Color = MaterialTheme.colors.onPrimary,
+    shape: Shape = androidx.compose.material.MaterialTheme.shapes.small.copy(CornerSize(percent = 50)),
+    backgroundColor: Color = MaterialTheme.colorScheme.onPrimary,
     contentColor: Color = contentColorFor(backgroundColor),
     elevation: Dp = 4.dp,
     content: @Composable () -> Unit
 ) {
     Surface(
-        modifier = modifier,
+        modifier = modifier.clickable { onClick.invoke() },
         shape = shape,
         color = backgroundColor,
         contentColor = contentColor,
-        elevation = elevation,
-        onClick = onClick,
-        role = Role.Button,
-        indication = rememberRipple()
+        tonalElevation = elevation,
     ) {
         CompositionLocalProvider(LocalContentAlpha provides contentColor.alpha) {
-            ProvideTextStyle(MaterialTheme.typography.button) {
+            ProvideTextStyle(MaterialTheme.typography.displayMedium) {
                 Box(
                     modifier = Modifier
                         .defaultMinSize(minWidth = 64.dp, minHeight = 64.dp),

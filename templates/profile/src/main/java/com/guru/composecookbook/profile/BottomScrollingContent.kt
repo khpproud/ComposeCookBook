@@ -6,26 +6,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.guru.composecookbook.theme.typography
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomScrollingContent() {
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colors.surface)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(8.dp)
     ) {
         SocialRow()
         Text(
             text = "About Me",
             style = typography.h6,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 8.dp, top = 12.dp)
         )
         Divider(modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp))
@@ -41,6 +42,7 @@ fun BottomScrollingContent() {
         Text(
             text = "About Project",
             style = typography.h6,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 8.dp, top = 16.dp)
         )
         Divider(modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp))

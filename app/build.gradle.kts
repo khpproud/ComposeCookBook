@@ -36,7 +36,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
+      //  useIR = true
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
 
     }
@@ -83,6 +83,7 @@ dependencies {
     implementation(project(":templates:pinlock"))
     implementation(project(":templates:profile"))
     implementation(project(":templates:login"))
+    implementation(project(":templates:cascademenu"))
     implementation(project(":components:fab"))
     implementation(project(":components:charts"))
     implementation(project(":components:tags"))

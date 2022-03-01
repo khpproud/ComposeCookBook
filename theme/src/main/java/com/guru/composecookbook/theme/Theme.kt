@@ -111,7 +111,7 @@ private val LightOrangeColorPalette = lightColors(
 )
 
 enum class ColorPallet {
-    PURPLE, GREEN, ORANGE, BLUE
+    PURPLE, GREEN, ORANGE, BLUE, WALLPAPER
 }
 
 @Composable
@@ -125,6 +125,7 @@ fun ComposeCookBookTheme(
         PURPLE -> if (darkTheme) DarkPurpleColorPalette else LightPurpleColorPalette
         ORANGE -> if (darkTheme) DarkOrangeColorPalette else LightOrangeColorPalette
         BLUE -> if (darkTheme) DarkBlueColorPalette else LightBlueColorPalette
+        else ->  if (darkTheme) DarkBlueColorPalette else LightBlueColorPalette
     }
 
     MaterialTheme(

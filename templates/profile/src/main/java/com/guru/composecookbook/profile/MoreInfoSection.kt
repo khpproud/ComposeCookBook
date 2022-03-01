@@ -3,7 +3,10 @@ package com.guru.composecookbook.profile
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ListItem
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Settings
@@ -15,13 +18,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.guru.composecookbook.theme.typography
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MoreInfoSection() {
     val context = LocalContext.current
     Text(
         text = "More Info",
         style = typography.h6,
+        color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(start = 8.dp, top = 16.dp)
     )
     Divider(modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp))

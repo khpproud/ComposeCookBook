@@ -4,26 +4,23 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.guru.composecookbook.ui.utils.TestTags
 
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterial3Api::class,
+ExperimentalAnimationApi::class,
+ExperimentalMaterialApi::class)
 @Composable
 fun WidgetScreen() {
     Scaffold(
         modifier = Modifier.testTag(TestTags.WIDGET_SCREEN_ROOT),
         topBar = {
-            TopAppBar(
+            SmallTopAppBar(
                 title = { Text(text = "All Material Widgets") },
-                elevation = 8.dp
             )
         },
         content = {
@@ -32,8 +29,8 @@ fun WidgetScreen() {
     )
 }
 
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalAnimationApi::class,
+ExperimentalMaterialApi::class)
 @Composable
 fun WidgetScreenContent() {
     LazyColumn(state = rememberLazyListState()) {
@@ -50,8 +47,8 @@ fun WidgetScreenContent() {
 }
 
 
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalAnimationApi::class,
+ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun PreviewScreen() {

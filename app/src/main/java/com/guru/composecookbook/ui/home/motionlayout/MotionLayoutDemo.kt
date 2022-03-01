@@ -6,8 +6,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,19 +16,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
 import com.guru.composecookbook.data.AlbumsDataProvider
 
 @Preview(group = "motion7")
 @Composable
 fun MotionLayoutDemo() {
-    Column(Modifier.background(Color.White)) {
+    Column() {
         ButtonsMotionExample()
         Spacer(modifier = Modifier.height(200.dp))
         ImageMotionExample()
     }
 }
 
+@OptIn(ExperimentalMotionApi::class)
 @Composable
 private fun ButtonsMotionExample() {
     var animateButton by remember { mutableStateOf(false) }
@@ -89,7 +91,6 @@ private fun ButtonsMotionExample() {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(Color.White)
     ) {
         Button(
             onClick = { animateButton = !animateButton },
@@ -112,6 +113,7 @@ private fun ButtonsMotionExample() {
     }
 }
 
+@OptIn(ExperimentalMotionApi::class)
 @Composable
 private fun ImageMotionExample() {
     val albums = AlbumsDataProvider.albums.take(4)
@@ -174,7 +176,6 @@ private fun ImageMotionExample() {
         progress = imageAnimationProgress,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
     ) {
         Image(
             painter = painterResource(id = albums[0].imageId),

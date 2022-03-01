@@ -8,12 +8,15 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +36,7 @@ import com.guru.composecookbook.theme.green500
 import com.guru.composecookbook.theme.typography
 import kotlin.math.roundToInt
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeableLists() {
     val albums by remember {
@@ -52,14 +55,14 @@ fun SwipeableLists() {
 }
 
 
-@ExperimentalMaterialApi
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterialApi::class,
+ExperimentalAnimationApi::class)
 @Composable
 fun SwipeableListItem(index: Int, album: Album, onItemSwiped: (Int) -> Unit) {
     val visible = remember(album.id) { mutableStateOf(true) }
 
     AnimatedVisibility(visible = visible.value) {
-        Box(modifier = Modifier.background(green500)) {
+        Box(modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
             BackgroundListItem(modifier = Modifier.align(Alignment.CenterEnd))
             ForegroundListItem(album, index) {
                 visible.value = false
@@ -73,10 +76,10 @@ enum class SwipeState {
     SWIPED, VISIBLE, MIDDLE
 }
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ForegroundListItem(album: Album, index: Int, onItemSwiped: (Int) -> Unit) {
-    val swipeableState = rememberSwipeableState(
+    val swipeableState = androidx.compose.material.rememberSwipeableState(
         initialValue = SwipeState.VISIBLE,
         confirmStateChange = {
             if (it == SwipeState.SWIPED) {
@@ -97,7 +100,7 @@ fun ForegroundListItem(album: Album, index: Int, onItemSwiped: (Int) -> Unit) {
                 orientation = Orientation.Horizontal
             )
             .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
-            .background(MaterialTheme.colors.background),
+            .background(MaterialTheme.colorScheme.background),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
@@ -116,7 +119,7 @@ fun ForegroundListItem(album: Album, index: Int, onItemSwiped: (Int) -> Unit) {
             Text(
                 text = album.song,
                 style = typography.h6.copy(fontSize = 16.sp),
-                color = MaterialTheme.colors.onSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = "${album.artist}, ${album.descriptions}",
@@ -129,7 +132,7 @@ fun ForegroundListItem(album: Album, index: Int, onItemSwiped: (Int) -> Unit) {
             Icon(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = null,
-                tint = MaterialTheme.colors.primaryVariant,
+                tint = MaterialTheme.colorScheme.primaryContainer,
                 modifier = Modifier
                     .padding(4.dp)
                     .size(20.dp)
@@ -150,14 +153,12 @@ fun BackgroundListItem(modifier: Modifier) {
         IconButton(onClick = {}) {
             Icon(
                 imageVector = Icons.Default.Delete,
-                tint = MaterialTheme.colors.onPrimary,
                 contentDescription = null
             )
         }
         IconButton(onClick = {}) {
             Icon(
                 imageVector = Icons.Default.AccountBox,
-                tint = MaterialTheme.colors.onPrimary,
                 contentDescription = null
             )
         }
